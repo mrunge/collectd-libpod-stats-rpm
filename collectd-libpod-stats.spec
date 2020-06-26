@@ -20,7 +20,7 @@ Name:           collectd-libpod-stats
 Release:        1%{?dist}
 Summary:        Collectd plugin for monitoring resource usage of containers managed by libpod
 
-License:        GPLv3
+License:        GPL-3.0-only
 # FIXME: Upstream uses unknown SPDX tag GPL-3.0-only!
 URL:            %{gourl}
 Source0:        %{gosource}
@@ -38,6 +38,8 @@ BuildRequires:  bison
 BuildRequires:  libtool
 BuildRequires:  pkg-config
 BuildRequires:  make
+
+Requires: collectd
 
 %description
 %{common_description}
@@ -78,8 +80,8 @@ install -m 0666 -vp %{_builddir}/%{extractdir}/types.db.%{plugin_name} %{buildro
 %files
 %license LICENSE
 %doc README.md
-%{_libdir}/collectd/
-%{_datadir}/collectd/
+%{_libdir}/collectd/%{plugin_name}.so
+%{_datadir}/collectd/types.db.%{plugin_name}
 
 %gopkgfiles
 
