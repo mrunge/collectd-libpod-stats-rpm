@@ -38,7 +38,8 @@ BuildRequires:  bison
 BuildRequires:  libtool
 BuildRequires:  pkg-config
 BuildRequires:  make
-BuildRequires:  collectd
+
+Requires:  collectd
 
 %description
 %{common_description}
