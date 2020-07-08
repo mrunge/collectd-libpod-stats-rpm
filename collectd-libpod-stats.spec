@@ -3,12 +3,12 @@
 
 # https://github.com/pleimer/collectd-libpod-stats
 %global goipath         github.com/pleimer/collectd-libpod-stats
-Version:                1.0.0
+Version:                1.0.1
 
 %gometa
-%define plugin_name libpodstats
-%define collectd_version 5.8.1
-%define go_collectd_version v0.5.0
+%global plugin_name libpodstats
+%global collectd_version 5.8.1
+%global go_collectd_version v0.5.0
 
 %global common_description %{expand:
 Collectd plugin for monitoring resource usage of containers managed by libpod.}
@@ -20,8 +20,7 @@ Name:           collectd-libpod-stats
 Release:        1%{?dist}
 Summary:        Collectd plugin for monitoring resource usage of containers managed by libpod
 
-License:        GPL-3.0-only
-# FIXME: Upstream uses unknown SPDX tag GPL-3.0-only!
+License:        MIT
 URL:            %{gourl}
 Source0:        %{gosource}
 Source1:        https://github.com/collectd/collectd/archive/collectd-%{collectd_version}.tar.gz
@@ -38,6 +37,7 @@ BuildRequires:  bison
 BuildRequires:  libtool
 BuildRequires:  pkg-config
 BuildRequires:  make
+BuildRequires:  gcc
 
 Requires:  collectd
 
@@ -70,7 +70,7 @@ go build -buildmode c-shared -compiler gc -tags="rpm_crashtraceback ${BUILDTAGS:
 %gopkginstall
 install -m 0755 -vd %{buildroot}%{_libdir}/collectd/ %{buildroot}%{_datadir}/collectd/
 install -m 0755 -vp %{gobuilddir}/lib/* %{buildroot}%{_libdir}/collectd/ 
-install -m 0666 -vp %{_builddir}/%{extractdir}/types.db.%{plugin_name} %{buildroot}%{_datadir}/collectd/
+install -m 0644 -vp %{_builddir}/%{extractdir}/types.db.%{plugin_name} %{buildroot}%{_datadir}/collectd/
 
 %if %{with check}
 %check
@@ -86,6 +86,7 @@ install -m 0666 -vp %{_builddir}/%{extractdir}/types.db.%{plugin_name} %{buildro
 %gopkgfiles
 
 %changelog
-* Tue Jun 16 16:26:54 EDT 2020 pleimer <pfbleimer@gmail.com> - 1.0-1
+* Tue Jun 16 16:26:54 EDT 2020 pleimer <pfbleimer@gmail.com> - 1.0.1-1
 - Initial package
+
 
