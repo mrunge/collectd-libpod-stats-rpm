@@ -3,7 +3,7 @@
 
 # https://github.com/pleimer/collectd-libpod-stats
 %global goipath         github.com/pleimer/collectd-libpod-stats
-Version:                1.0.1
+Version:                1.0.2
 
 %gometa
 %global plugin_name libpodstats
