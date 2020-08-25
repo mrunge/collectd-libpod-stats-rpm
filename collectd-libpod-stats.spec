@@ -3,11 +3,22 @@
 
 # https://github.com/pleimer/collectd-libpod-stats
 %global goipath         github.com/pleimer/collectd-libpod-stats
+
+%global provider        github
+%global provider_tld    com
+%global project         pleimer
+%global repo            collectd-libpod-stats
+%global provider_prefix %{provider}.%{provider_tld}/%{project}/%{repo}
+%global import_path     github.com/pleimer/collectd-libpod-stats
+# %global commit          ac6580df4449443a05718fd7858c1f91ad5f8d20
+%global shortcommit     %(c=%{commit}; echo ${c:0:7})
+
+
 Version:                1.0.2
 
 %gometa
 %global plugin_name libpodstats
-%global collectd_version 5.8.1
+%global collectd_version 5.11.0
 %global go_collectd_version v0.5.0
 
 %global common_description %{expand:
@@ -21,17 +32,17 @@ Release:        1%{?dist}
 Summary:        Collectd plugin for monitoring resource usage of containers managed by libpod
 
 License:        MIT
-URL:            %{gourl}
-Source0:        %{gosource}
+URL:            https://%{provider_prefix}
+Source0:        https://%{provider_prefix}/archive/v%{version}.tar.gz#/%{repo}-%{version}.tar.gz
 Source1:        https://github.com/collectd/collectd/archive/collectd-%{collectd_version}.tar.gz
-Source2:        https://github.com/collectd/go-collectd/archive/%{go_collectd_version}.tar.gz 
+Source2:        https://github.com/collectd/go-collectd/archive/%{go_collectd_version}.tar.gz
 
 BuildRequires:  golang(github.com/pkg/errors)
 BuildRequires:  golang(golang.org/x/sys/unix)
-BuildRequires:  golang(github.com/google/go-cmp/cmp)
-BuildRequires:  golang(go.uber.org/multierr)
+BuildRequires:  golang-github-google-cmp
+BuildRequires:  golang-uber-multierr
 BuildRequires:  autoconf
-BuildRequires:  automake 
+BuildRequires:  automake
 BuildRequires:  flex
 BuildRequires:  bison
 BuildRequires:  libtool
@@ -47,7 +58,7 @@ Requires:  collectd
 %gopkg
 
 %prep
-%goprep
+%setup -q -n %{repo}-%{version}
 %setup -T -D -q -a 1 -n %{extractdir}
 mkdir %{gobuilddir}/src/collectd.org/
 cd %{gobuilddir}/src/collectd.org/
@@ -67,7 +78,6 @@ go build -buildmode c-shared -compiler gc -tags="rpm_crashtraceback ${BUILDTAGS:
 
 
 %install
-%gopkginstall
 install -m 0755 -vd %{buildroot}%{_libdir}/collectd/ %{buildroot}%{_datadir}/collectd/
 install -m 0755 -vp %{gobuilddir}/lib/* %{buildroot}%{_libdir}/collectd/ 
 install -m 0644 -vp %{_builddir}/%{extractdir}/types.db.%{plugin_name} %{buildroot}%{_datadir}/collectd/
@@ -83,7 +93,6 @@ install -m 0644 -vp %{_builddir}/%{extractdir}/types.db.%{plugin_name} %{buildro
 %{_libdir}/collectd/%{plugin_name}.so
 %{_datadir}/collectd/types.db.%{plugin_name}
 
-%gopkgfiles
 
 %changelog
 * Tue Jun 16 16:26:54 EDT 2020 pleimer <pfbleimer@gmail.com> - 1.0.1-1
